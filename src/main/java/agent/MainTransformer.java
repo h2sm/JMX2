@@ -18,12 +18,15 @@ public class MainTransformer implements ClassFileTransformer {
                 ClassPool pool = ClassPool.getDefault();
                 CtClass clazz = pool.get("TaskManager/run");
 
-                CtField intFiled = new CtField(CtClass.intType, "x", clazz);
-                intFiled.setModifiers(Modifier.STATIC | Modifier.PRIVATE);
-                clazz.addField(intFiled, "0");
+                CtField startTiming = new CtField(CtClass.longType,"timeStart",clazz);//создаем long для таймера
+                startTiming.setModifiers(Modifier.STATIC | Modifier.PRIVATE);
+                clazz.addField(startTiming,"0.0");
 
-                CtField doubleField = CtField.make("private static double y = 200.0;", clazz);
-                clazz.addField(doubleField);
+                CtField stopTiming = CtField.make("private static long timeStop = 0.0;", clazz);
+                clazz.addField(stopTiming);
+
+                CtField timeElapsed = CtField.make("private static long timeElapsed = 0.0;",clazz);
+
 
 //                CtMethod newMethod = CtMethod.make("""
 //                        private static void newMethod() {
