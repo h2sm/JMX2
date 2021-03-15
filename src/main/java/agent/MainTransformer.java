@@ -27,7 +27,17 @@ public class MainTransformer implements ClassFileTransformer {
 
                 CtField timeElapsed = CtField.make("private static long timeElapsed = 0.0;",clazz);
 
-                //CtMethod newMethod = CtMethod.make;
+                CtMethod startStuff = CtMethod.make("private static void startStuff(){" +
+                        "timeStart = System.nanoTime();" +
+                        "}",clazz);
+
+                CtMethod stopStuff = CtMethod.make("private static void stopStuff(){" +
+                        "timeStop = System.nanoTime();" +
+                        "}",clazz);
+
+                CtMethod countingMethod = CtMethod.make("private static void timeCount(){" +
+                        "timeElapsed = (timeStop - timeStart)/1000000}" +
+                        "", clazz);
 
 //                CtMethod newMethod = CtMethod.make(""
 //                        private static void newMethod() {
@@ -37,9 +47,12 @@ public class MainTransformer implements ClassFileTransformer {
 //                            System.out.println("after update: x + y = " + (x + y));
 //                        }
 //                        "", clazz);
-                //clazz.addMethod(newMethod);
+
+                clazz.addMethod(stopStuff);
+                clazz.addMethod(countingMethod);
                 clazz.getDeclaredMethod("run").insertBefore("startStuff();");//начинаем отсчет
                 clazz.getDeclaredMethod("run").insertAfter("endStuff();");//заканчиваем отчет
+                clazz.getDeclaredMethod("run").insertAfter("timeCount();");
 
                 return clazz.toBytecode();
             }
