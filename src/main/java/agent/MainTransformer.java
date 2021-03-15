@@ -27,17 +27,19 @@ public class MainTransformer implements ClassFileTransformer {
 
                 CtField timeElapsed = CtField.make("private static long timeElapsed = 0.0;",clazz);
 
+                //CtMethod newMethod = CtMethod.make;
 
-//                CtMethod newMethod = CtMethod.make("""
+//                CtMethod newMethod = CtMethod.make(""
 //                        private static void newMethod() {
 //                            System.out.println("x + y = " + (x + y));
 //                            x += 10;
 //                            y += 20;
 //                            System.out.println("after update: x + y = " + (x + y));
 //                        }
-//                        """, clazz);
-             //   clazz.addMethod(newMethod);
-                clazz.getDeclaredMethod("run").insertAfter("newMethod();");
+//                        "", clazz);
+                //clazz.addMethod(newMethod);
+                clazz.getDeclaredMethod("run").insertBefore("startStuff();");//начинаем отсчет
+                clazz.getDeclaredMethod("run").insertAfter("endStuff();");//заканчиваем отчет
 
                 return clazz.toBytecode();
             }
