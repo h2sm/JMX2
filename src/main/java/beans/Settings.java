@@ -8,10 +8,10 @@ import java.util.concurrent.ScheduledFuture;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Settings implements HelloMXBean {
-    private ArrayList<Tasks> tasks = new ArrayList<>();
+    private final ArrayList<Tasks> tasks = new ArrayList<>();
     private final String[] args;
     private TaskManager taskManager;
-    private  ScheduledFuture<?> future;
+    private ScheduledFuture<?> future;
 
     public Settings(String[] args) {
         this.args = args;

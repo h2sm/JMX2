@@ -1,4 +1,4 @@
-package beans;
+package agent;
 
 import java.lang.instrument.Instrumentation;
 

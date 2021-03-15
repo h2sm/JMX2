@@ -1,4 +1,4 @@
-package beans;
+package agent;
 import javassist.*;
 
 import java.lang.instrument.ClassFileTransformer;
