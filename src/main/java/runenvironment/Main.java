@@ -1,4 +1,4 @@
-package beans;
+package runenvironment;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 

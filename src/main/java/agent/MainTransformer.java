@@ -14,13 +14,13 @@ public class MainTransformer implements ClassFileTransformer {
                             byte[] classfileBuffer) throws IllegalClassFormatException {
 
         try {
-            if ("main/Main".equals(className)) {
+            if ("runenvironment/TaskManager".equals(className)) {
                 ClassPool pool = ClassPool.getDefault();
-                CtClass clazz = pool.get("main.Main");
+                CtClass clazz = pool.get("TaskManager/run");
 
                 CtField intFiled = new CtField(CtClass.intType, "x", clazz);
                 intFiled.setModifiers(Modifier.STATIC | Modifier.PRIVATE);
-                clazz.addField(intFiled, "99");
+                clazz.addField(intFiled, "0");
 
                 CtField doubleField = CtField.make("private static double y = 200.0;", clazz);
                 clazz.addField(doubleField);
@@ -34,7 +34,7 @@ public class MainTransformer implements ClassFileTransformer {
 //                        }
 //                        """, clazz);
              //   clazz.addMethod(newMethod);
-                clazz.getDeclaredMethod("main").insertAfter("newMethod();");
+                clazz.getDeclaredMethod("run").insertAfter("newMethod();");
 
                 return clazz.toBytecode();
             }

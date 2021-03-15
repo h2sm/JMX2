@@ -1,5 +1,4 @@
-package beans;
-import java.util.HashSet;
+package runenvironment;
 
 public interface HelloMXBean {
     void submit(String name, String classpath, String mainClass, int period) throws Exception;
