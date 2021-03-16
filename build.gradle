@@ -1,6 +1,6 @@
 plugins {
     id 'groovy'
-    id 'java'
+    id 'application'
 }
 // https://mvnrepository.com/artifact/org.javassist/javassist
 
@@ -17,4 +17,17 @@ dependencies {
     implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 
 }
-
+run{
+    //java-agent
+    //-javaagent:<путь к jar с трансформером>
+    //dependsOn(jar)
+    mainClassName = "runenvironment.Main"
+    jvmArgs("-javaagent:D:\\Java_laba\\JMX2\\build\\libs\\JMX2-1.0-SNAPSHOT.jar")
+}
+jar{
+    manifest{
+        attributes(
+                "Premain-Class" : "agent.Agent"
+        )
+    }
+}

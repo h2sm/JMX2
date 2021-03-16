@@ -5,7 +5,7 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
-public class MainTransformer implements ClassFileTransformer {
+public class MainTransformer implements ClassFileTransformer,MainTransformerMBean {
     @Override
     public byte[] transform(ClassLoader loader,
                             String className,
@@ -14,7 +14,7 @@ public class MainTransformer implements ClassFileTransformer {
                             byte[] classfileBuffer) throws IllegalClassFormatException {
 
         try {
-            if ("runenvironment/TaskManager".equals(className)) {
+            if ("runenvironment/TaskManager".equals(className)) {//если загружаемый класс был передан через jmx
                 ClassPool pool = ClassPool.getDefault();
                 CtClass clazz = pool.get("TaskManager/run");
 
@@ -34,14 +34,13 @@ public class MainTransformer implements ClassFileTransformer {
                 CtMethod stopStuff = CtMethod.make("private static void stopStuff(){" +
                         "timeStop = System.nanoTime();" +
                         "timeElapsed = (timeStop - timeStart)/1000000;" +
+                        "System.out.println(\"[profile] task \" + className + \" time elapsed : \" + timeElapsed);\n" +
                         "}",clazz);
-
                 clazz.addMethod(startStuff);
                 clazz.addMethod(stopStuff);
 
-                clazz.getDeclaredMethod("run").insertBefore("startStuff();");//начинаем отсчет
-                clazz.getDeclaredMethod("run").insertAfter("endStuff();");//заканчиваем отчет
-                clazz.getDeclaredMethod("run").insertAfter("timeCount();");
+                clazz.getDeclaredMethod("run").insertBefore("startStuff();");
+                clazz.getDeclaredMethod("run").insertAfter("stopStuff();");
 
                 return clazz.toBytecode();
             }
@@ -53,6 +52,11 @@ public class MainTransformer implements ClassFileTransformer {
             e.printStackTrace();
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public String test() {
+        return "Test123";
     }
 }
 

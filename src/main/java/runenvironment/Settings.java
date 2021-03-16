@@ -78,7 +78,12 @@ public class Settings implements HelloMXBean {
 
     @Override
     public void startProfiling(String name) {
+        //с помощью classloader перезагрузить -
+        //добавить новый список для задач с профилированием
+        //передавать в mainTransformer (лучше хранить там), здесь вызывать методы, из имен получать внутренние имена классов
+        for (Tasks task : tasks){
 
+        }
     }
 
 }
