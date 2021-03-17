@@ -1,6 +1,5 @@
 package runenvironment;
 
-
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,13 +11,15 @@ public class Settings implements HelloMXBean {
     private final String[] args;
     private TaskManager taskManager;
     private ScheduledFuture<?> future;
-
+    private String name, classpath, mainClass;
+    private int period;
     public Settings(String[] args) {
         this.args = args;
     }
 
     @Override
     public void submit(String name, String classpath, String mainClass, int period) {
+        this.name=name; this.classpath = classpath; this.mainClass = mainClass; this.period = period;
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         try {
             taskManager = new TaskManager(classpath,mainClass,args);//создаем новое задание
@@ -78,12 +79,14 @@ public class Settings implements HelloMXBean {
 
     @Override
     public void startProfiling(String name) {
+        cancel(name);//останавливаем
+        submit(name,classpath, mainClass, period);
+
+
         //с помощью classloader перезагрузить -
         //добавить новый список для задач с профилированием
         //передавать в mainTransformer (лучше хранить там), здесь вызывать методы, из имен получать внутренние имена классов
-        for (Tasks task : tasks){
 
-        }
     }
 
 }

@@ -4,6 +4,7 @@ import javassist.*;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
 
 public class MainTransformer implements ClassFileTransformer,MainTransformerMBean {
     @Override
@@ -12,11 +13,12 @@ public class MainTransformer implements ClassFileTransformer,MainTransformerMBea
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) throws IllegalClassFormatException {
+        System.out.println(className);
 
         try {
-            if ("runenvironment/TaskManager".equals(className)) {//если загружаемый класс был передан через jmx
+            if (className.equals("runenvironment/TaskManager")) {//если загружаемый класс был передан через jmx
                 ClassPool pool = ClassPool.getDefault();
-                CtClass clazz = pool.get("TaskManager/run");
+                CtClass clazz = pool.get("main.Main");
 
                 CtField startTiming = CtField.make("private static long timeStart = 0.0", clazz);
                 clazz.addField(startTiming);
@@ -58,5 +60,16 @@ public class MainTransformer implements ClassFileTransformer,MainTransformerMBea
     public String test() {
         return "Test123";
     }
+
+    @Override
+    public void startProfiling() {
+
+    }
+
+    @Override
+    public void stopProfiling() {
+
+    }
+
 }
 

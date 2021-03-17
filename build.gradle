@@ -18,9 +18,7 @@ dependencies {
 
 }
 run{
-    //java-agent
-    //-javaagent:<путь к jar с трансформером>
-    //dependsOn(jar)
+    dependsOn(jar)
     mainClassName = "runenvironment.Main"
     jvmArgs("-javaagent:D:\\Java_laba\\JMX2\\build\\libs\\JMX2-1.0-SNAPSHOT.jar")
 }
