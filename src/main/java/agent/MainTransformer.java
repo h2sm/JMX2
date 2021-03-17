@@ -13,7 +13,7 @@ public class MainTransformer implements ClassFileTransformer,MainTransformerMBea
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) throws IllegalClassFormatException {
-        System.out.println("classname " + className);
+        //System.out.println("classname " + className);
 
         try {
             if (className.equals("main/Main")) {//если загружаемый класс был передан через jmx
@@ -40,9 +40,10 @@ public class MainTransformer implements ClassFileTransformer,MainTransformerMBea
                         "}",clazz);
                 clazz.addMethod(startStuff);
                 clazz.addMethod(stopStuff);
+                clazz.getDeclaredMethod("main");
 
-                clazz.getDeclaredMethod("run").insertBefore("startStuff();");
-                clazz.getDeclaredMethod("run").insertAfter("stopStuff();");
+                clazz.getDeclaredMethod("main").insertBefore("startStuff();");
+                clazz.getDeclaredMethod("main").insertAfter("stopStuff();");
 
                 return clazz.toBytecode();
             }

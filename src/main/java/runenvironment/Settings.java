@@ -18,7 +18,7 @@ public class Settings implements HelloMXBean {
     }
     @Override
     public void testSubmit(){
-        submit("test", "D:\\Java_laba\\s2-t11-3-loaders\\out\\production\\s2-t11-3-loaders", "main.Main", 5);
+        submit("test", "D:\\Java_laba\\TestHelloWorld\\build\\classes\\java\\main", "Main", 5);
     }
 
     @Override
