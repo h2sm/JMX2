@@ -16,6 +16,10 @@ public class Settings implements HelloMXBean {
     public Settings(String[] args) {
         this.args = args;
     }
+    @Override
+    public void testSubmit(){
+        submit("test", "D:\\Java_laba\\s2-t11-3-loaders\\out\\production\\s2-t11-3-loaders", "main.Main", 5);
+    }
 
     @Override
     public void submit(String name, String classpath, String mainClass, int period) {

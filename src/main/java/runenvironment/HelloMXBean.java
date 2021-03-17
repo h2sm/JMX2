@@ -7,4 +7,5 @@ public interface HelloMXBean {
     void showAllTasks();
     void stopProfiling(String name);
     void startProfiling(String name);
+    void testSubmit();
 }

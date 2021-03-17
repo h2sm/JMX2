@@ -1,10 +1,10 @@
 package agent;
 import javassist.*;
+import runenvironment.TaskManager;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import java.util.ArrayList;
 
 public class MainTransformer implements ClassFileTransformer,MainTransformerMBean {
     @Override
@@ -13,10 +13,10 @@ public class MainTransformer implements ClassFileTransformer,MainTransformerMBea
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) throws IllegalClassFormatException {
-        System.out.println(className);
+        System.out.println("classname " + className);
 
         try {
-            if (className.equals("runenvironment/TaskManager")) {//если загружаемый класс был передан через jmx
+            if (className.equals("main/Main")) {//если загружаемый класс был передан через jmx
                 ClassPool pool = ClassPool.getDefault();
                 CtClass clazz = pool.get("main.Main");
 
