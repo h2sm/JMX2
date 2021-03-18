@@ -1,13 +1,12 @@
 package agent;
 import javassist.*;
-import runenvironment.TaskManager;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import java.util.Arrays;
 
-public class MainTransformer implements ClassFileTransformer,MainTransformerMBean {
+
+public class MainTransformer implements ClassFileTransformer {
     private final String path = "D:\\Java_laba\\TestHelloWorld\\build\\classes\\java\\main";
     @Override
     public byte[] transform(ClassLoader loader,
@@ -24,28 +23,23 @@ public class MainTransformer implements ClassFileTransformer,MainTransformerMBea
                 pool.insertClassPath(path);
                 CtClass clazz = pool.get("Main");
 
-                CtField startTiming = CtField.make("private static long timeStart = 0.0;", clazz);
+                CtField startTiming = CtField.make("private static double timeStart = System.currentTimeMillis();", clazz);
                 clazz.addField(startTiming);
 
-                CtField stopTiming = CtField.make("private static long timeStop = 0.0;", clazz);
+                CtField stopTiming = CtField.make("private static double timeStop = 0.0;", clazz);
                 clazz.addField(stopTiming);
 
-                CtField timeElapsed = CtField.make("private static long timeElapsed = 0.0;",clazz);
+                CtField timeElapsed = CtField.make("private static double timeElapsed = 0.0;",clazz);
                 clazz.addField(timeElapsed);
 
-                CtMethod startStuff = CtMethod.make("private static void startStuff(){" +
-                        "timeStart = System.nanoTime();" +
-                        "}",clazz);
-
                 CtMethod stopStuff = CtMethod.make("private static void stopStuff(){" +
-                        "timeStop = System.nanoTime();" +
-                        "timeElapsed = (timeStop - timeStart)/1000000;" +
+                        "timeStop = System.currentTimeMillis();" +
+                        "timeElapsed = timeStop - timeStart;" +
                         "System.out.println(\"[profile] task \" + \" time elapsed : \" + timeElapsed);\n" +
                         "}",clazz);
-                clazz.addMethod(startStuff);
+
                 clazz.addMethod(stopStuff);
 
-                clazz.getDeclaredMethod("main").insertBefore("startStuff();");
                 clazz.getDeclaredMethod("main").insertAfter("stopStuff();");
                 clazz.writeFile("D:\\Java_laba");
                 return clazz.toBytecode();
@@ -58,21 +52,6 @@ public class MainTransformer implements ClassFileTransformer,MainTransformerMBea
             e.printStackTrace();
             throw new RuntimeException();
         }
-    }
-
-    @Override
-    public String test() {
-        return "Test123";
-    }
-
-    @Override
-    public void startProfiling() {
-
-    }
-
-    @Override
-    public void stopProfiling() {
-
     }
 
 }

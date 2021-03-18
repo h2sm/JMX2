@@ -2,7 +2,6 @@ plugins {
     id 'groovy'
     id 'application'
 }
-// https://mvnrepository.com/artifact/org.javassist/javassist
 
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -25,7 +24,9 @@ run{
 jar{
     manifest{
         attributes(
-                "Premain-Class" : "agent.Agent"
+                "Can-Redefine-Classes": true,
+                "Can-Retransform-Classes": true,
+                "Premain-Class" : "agent.Agent",
         )
     }
 }
