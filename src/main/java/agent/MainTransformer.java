@@ -17,19 +17,18 @@ public class MainTransformer implements ClassFileTransformer {
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) throws IllegalClassFormatException {
-       // System.out.println("classname " + className);
-
+       System.out.println("classname " + className + " loader " + loader.getName());
         try {
-            if (className.equals("Main")) {//если загружаемый класс был передан через jmx
-
+            if (className.equals("runenvironment/TaskManager")) {//если загружаемый класс был передан через jmx
+                System.out.println("ACCEPTED classname " + className + " loader " + loader.getName());
                 ClassPool classPool = new ClassPool();
                 classPool.appendClassPath(new LoaderClassPath(loader));
                 CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(classfileBuffer));
                 CtMethod[] methods = ctClass.getMethods();
 
                 for( CtMethod method : methods){
-                    if (method.getName().equals("main")){
-                        System.out.println("Entering "+method.getName() + " of " + className);
+                    if (method.getName().equals("run")){
+                        System.out.println("Entering "+ method.getName() + " of " + className);
                         ctClass.defrost();
                         method.addLocalVariable("elapsedTime", CtClass.longType);
                         method.insertBefore("elapsedTime = System.currentTimeMillis();");
