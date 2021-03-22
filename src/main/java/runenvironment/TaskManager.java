@@ -38,7 +38,7 @@ public class TaskManager implements Runnable {
         } catch (Exception exception) {
             exception.printStackTrace();
             exc = exception.getClass().getSimpleName();
-            System.out.println("что-то пошло не так....");
+            System.out.println("Exception in Runtime caused by: " + exc);
         }
     }
 
