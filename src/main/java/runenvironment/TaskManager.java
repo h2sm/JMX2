@@ -17,6 +17,7 @@ public class TaskManager implements Runnable {
         this.args=args;
     }
 
+
     public String statusOfRunnable(){//статус, если что-то пошло не так во время рантайма
         return exc;
     }
