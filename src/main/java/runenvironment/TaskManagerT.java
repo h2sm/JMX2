@@ -1,25 +1,22 @@
 package runenvironment;
+
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class TaskManager implements Runnable {
+public class TaskManagerT implements Runnable {
     private final String classpath;
     private final String mainClass;
     private final String[] args;
     private String exc = "OK";
-    private boolean isProfiling = false;
 
-
-    public TaskManager(String cp, String mC, String[] args) {
-        this.classpath=cp;
-        this.mainClass=mC;
-        this.args=args;
+    public TaskManagerT(String classpath, String mainClass, String[] args) {
+        this.classpath = classpath;
+        this.mainClass = mainClass;
+        this.args = args;
     }
-
-
-    public String statusOfRunnable(){//статус, если что-то пошло не так во время рантайма
+    public String statusOfRunnableTransformer(){
         return exc;
     }
 
@@ -29,6 +26,7 @@ public class TaskManager implements Runnable {
             throw new RuntimeException();
         return new URLClassLoader(new URL[]{path.toUri().toURL()});
     }
+
     @Override
     public void run() {
         try {
@@ -39,10 +37,7 @@ public class TaskManager implements Runnable {
         } catch (Exception exception) {
             exception.printStackTrace();
             exc = exception.getClass().getSimpleName();
-            System.out.println("Exception in Runtime caused by: " + exc);
+            System.out.println("Exception in Transforming runtime caused by: " + exc);
         }
     }
-
 }
-
-

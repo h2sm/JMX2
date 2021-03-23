@@ -23,13 +23,14 @@ public class Settings implements HelloMXBean {
     public void submit(String name, String classpath, String mainClass, int period) {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         try {
-            taskManager = new TaskManager(classpath,mainClass,args);//создаем новое задание
+            taskManager = new TaskManager(classpath,mainClass,args);//TaskManager - исключительно для ЗАПУСКА
             future = scheduledExecutorService.scheduleAtFixedRate(taskManager, 0, period, SECONDS);//создаем новый executor
-            tasks.add(new Tasks(name, future, "running", taskManager));//присваиваем статус
+            tasks.add(new Tasks(name, future, "running", taskManager, classpath, mainClass, args,false, period));//в Tasks будет хранится ВСЯ информация о заданной таске
 
         } catch (Exception e) {//если появляются иные исключение
-            tasks.add(new Tasks(name, future, e.getClass().getSimpleName(), taskManager));//сохраняем неудачный запуск
+            tasks.add(new Tasks(name, future, e.getClass().getSimpleName(), taskManager,classpath, mainClass, args,false, period));//сохраняем неудачный запуск
             System.out.println("Error in initializing");
+            future.cancel(true);
         }
         if (!taskManager.statusOfRunnable().equals("OK")){//если программа не запустилась
             for (Tasks task : tasks){
@@ -75,17 +76,31 @@ public class Settings implements HelloMXBean {
 
     @Override
     public void stopProfiling(String name) {
-
+        for (Tasks task : tasks){
+            if (task.getName().equals(name)){
+                if (task.isProfiling()){
+                    task.getScheduledFuture().cancel(true);
+                    task.stopProfiling();
+                    submit(task.getName(),task.getClasspath(),task.getMainclass(),task.getPeriod());
+                }
+            }
+        }
     }
 
     @Override
     public void startProfiling(String name) {
-
-
-        //с помощью classloader перезагрузить -
-        //добавить новый список для задач с профилированием
-        //передавать в mainTransformer (лучше хранить там), здесь вызывать методы, из имен получать внутренние имена классов
-
+        for (Tasks task : tasks) {
+            if (task.getName().equals(name)){
+                if (!task.isProfiling()){
+                    task.getScheduledFuture().cancel(true);
+                    ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+                    var profiling = new TaskManagerT(task.getClasspath(),task.getMainclass(),task.getArgs());
+                    ScheduledFuture<?> sf = service.scheduleAtFixedRate(profiling,0,task.getPeriod(), SECONDS);
+                    task.setProfiling();
+                    task.setScheduledFuture(sf);
+                }
+            }
+        }
     }
 
 }
