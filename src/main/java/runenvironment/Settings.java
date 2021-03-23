@@ -15,7 +15,7 @@ public class Settings implements HelloMXBean {
         this.args = args;
     }
     @Override
-    public void testSubmit(){
+    public void testSubmit(){//для тестов
         submit("test", "D:\\Java_laba\\TestHelloWorld\\build\\classes\\java\\main", "Main", 5);
     }
 
